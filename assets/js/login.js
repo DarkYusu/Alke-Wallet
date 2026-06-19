@@ -37,6 +37,8 @@ $(document).ready(function () {
 
         if (accesoPermitido) {
 
+            localStorage.setItem("usuarioActual", email);
+
             $("#alertContainer").html(`
                 <div class="alert alert-success">
                     Inicio de sesión exitoso.
