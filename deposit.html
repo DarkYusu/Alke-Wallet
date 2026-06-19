@@ -120,9 +120,24 @@
 
                 saldo = 60000;
 
+                const claveMovimientos =
+                    `movimientos_${usuarioActual}`;
+
+                let movimientos =
+                    JSON.parse(
+                        localStorage.getItem(claveMovimientos)
+                    ) || [];
+
+                movimientos.unshift({
+                    tipo: 'deposito',
+                    descripcion: 'Depósito',
+                    tiempo: 'Hoy',
+                    monto: '+' + '$' + monto.toLocaleString('es-CL')
+                });
+
                 localStorage.setItem(
-                    claveSaldo,
-                    saldo
+                    claveMovimientos,
+                    JSON.stringify(movimientos)
                 );
 
             }
