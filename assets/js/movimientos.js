@@ -1,48 +1,35 @@
-const listaTransacciones = [
+const usuarioActual = localStorage.getItem('usuarioActual');
 
-    {
-        tipo: 'compra',
-        descripcion: 'Compra en línea',
-        tiempo: 'Hace 2 horas',
-        monto: '-$50'
-    },
+if (!usuarioActual) {
+    window.location.href = 'login.html';
+}
 
-    {
-        tipo: 'deposito',
-        descripcion: 'Depósito',
-        tiempo: 'Hace 1 día',
-        monto: '+$100'
-    },
+const claveMovimientos = `movimientos_${usuarioActual}`;
 
-    {
-        tipo: 'transferencia',
-        descripcion: 'Transferencia recibida',
-        tiempo: 'Hace 3 días',
-        monto: '+$7.500'
-    },
+let listaTransacciones =
+    JSON.parse(
+        localStorage.getItem(claveMovimientos)
+    );
 
-    {
-        tipo: 'compra',
-        descripcion: 'Compra en línea',
-        tiempo: 'Hace 5 días',
-        monto: '-$5.550'
-    },
+if (!listaTransacciones) {
 
-    {
-        tipo: 'deposito',
-        descripcion: 'Depósito misma cuenta',
-        tiempo: 'Hace 1 semana',
-        monto: '+$10.500'
-    },
+    listaTransacciones = [
 
-    {
-        tipo: 'transferencia',
-        descripcion: 'Transferencia recibida',
-        tiempo: 'Hace 2 semanas',
-        monto: '+$7.575'
-    }
+        {
+            tipo: 'deposito',
+            descripcion: 'Saldo inicial',
+            tiempo: 'Hoy',
+            monto: '+$60.000'
+        }
 
-];
+    ];
+
+    localStorage.setItem(
+        claveMovimientos,
+        JSON.stringify(listaTransacciones)
+    );
+
+}
 
 function mostrarUltimosMovimientos(filtro) {
 
