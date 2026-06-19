@@ -7,7 +7,6 @@
     <title>Wallet - Agregar Contacto</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <link href="assets/css/styles.css" rel="stylesheet">
 </head>
 
@@ -21,10 +20,7 @@
                 💳 Wallet
             </a>
 
-            <button class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
 
                 <span class="navbar-toggler-icon"></span>
 
@@ -70,11 +66,7 @@
                         Nombre del Contacto:
                     </label>
 
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="contactName"
-                        placeholder="Nombre completo">
+                    <input type="text" class="form-control" id="contactName" placeholder="Nombre completo">
 
                     <small class="form-text text-muted">
                         Ingresa el nombre completo del contacto
@@ -88,11 +80,7 @@
                         CBU (Código Bancario Único):
                     </label>
 
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="contactCBU"
-                        placeholder="1234567890123456789012"
+                    <input type="text" class="form-control" id="contactCBU" placeholder="1234567890123456789012"
                         maxlength="22">
 
                     <small class="form-text text-muted">
@@ -107,11 +95,7 @@
                         Alias:
                     </label>
 
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="contactAlias"
-                        placeholder="nombre.apellido">
+                    <input type="text" class="form-control" id="contactAlias" placeholder="nombre.apellido">
 
                     <small class="form-text text-muted">
                         Identificador corto del contacto
@@ -125,9 +109,7 @@
                         Banco:
                     </label>
 
-                    <select
-                        class="form-select"
-                        id="contactBank">
+                    <select class="form-select" id="contactBank">
 
                         <option value="">
                             Selecciona un banco...
@@ -163,16 +145,13 @@
 
                 <div class="d-grid gap-2">
 
-                    <button
-                        type="submit"
-                        class="btn btn-success btn-lg">
+                    <button type="submit" class="btn btn-success btn-lg">
 
                         Guardar Contacto
 
                     </button>
 
-                    <a href="sendmoney.html"
-                        class="btn btn-secondary">
+                    <a href="sendmoney.html" class="btn btn-secondary">
 
                         Cancelar
 
@@ -209,14 +188,34 @@
 
         $(document).ready(function () {
 
+            const usuarioActual =
+                localStorage.getItem('usuarioActual');
+
+            if (!usuarioActual) {
+
+                window.location.href = 'login.html';
+                return;
+
+            }
+
+            const claveContactos =
+                `contactos_${usuarioActual}`;
+
             $('#newContactForm').submit(function (e) {
 
                 e.preventDefault();
 
-                let name = $('#contactName').val().trim();
-                let cbu = $('#contactCBU').val().trim();
-                let alias = $('#contactAlias').val().trim();
-                let bank = $('#contactBank').val();
+                let name =
+                    $('#contactName').val().trim();
+
+                let cbu =
+                    $('#contactCBU').val().trim();
+
+                let alias =
+                    $('#contactAlias').val().trim();
+
+                let bank =
+                    $('#contactBank').val();
 
                 if (
                     name === '' ||
@@ -232,6 +231,7 @@
                     `);
 
                     return;
+
                 }
 
                 if (
@@ -246,22 +246,27 @@
                     `);
 
                     return;
+
                 }
 
                 let contacts =
                     JSON.parse(
-                        localStorage.getItem('walletContacts')
+                        localStorage.getItem(
+                            claveContactos
+                        )
                     ) || [];
 
                 contacts.push({
+
                     name: name,
                     cbu: cbu,
                     alias: alias,
                     bank: bank
+
                 });
 
                 localStorage.setItem(
-                    'walletContacts',
+                    claveContactos,
                     JSON.stringify(contacts)
                 );
 
