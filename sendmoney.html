@@ -79,13 +79,8 @@
 
         <ul id="contactList" class="list-group">
 
-            <li class="list-group-item contacto">
-                John Doe
-            </li>
-
-            <li class="list-group-item contacto">
-                Jane Smith
-            </li>
+            <ul id="contactList" class="list-group">
+            </ul>
 
         </ul>
 
@@ -126,14 +121,66 @@
 
         $(document).ready(function () {
 
-            localStorage.setItem(
-                'saldo',
-                saldo
-            );
+            const usuarioActual = localStorage.getItem('usuarioActual');
+
+            if (!usuarioActual) {
+
+                window.location.href = 'login.html';
+                return;
+
+            }
+
+            const claveSaldo = `saldo_${usuarioActual}`;
+            const claveContactos = `contactos_${usuarioActual}`;
+            const claveMovimientos = `movimientos_${usuarioActual}`;
+
+            let saldo = Number(localStorage.getItem(claveSaldo));
+
+            if (isNaN(saldo)) {
+
+                saldo = 60000;
+
+                localStorage.setItem(
+                    claveSaldo,
+                    saldo
+                );
+
+            }
 
             $('#saldoActual').text(
                 '$' + saldo.toLocaleString('es-CL')
             );
+
+            let contactos =
+                JSON.parse(
+                    localStorage.getItem(claveContactos)
+                ) || [];
+
+            $('#contactList').empty();
+
+            if (contactos.length === 0) {
+
+                $('#contactList').append(`
+            <li class="list-group-item text-muted">
+                No hay contactos registrados.
+            </li>
+        `);
+
+            } else {
+
+                contactos.forEach(function (contacto) {
+
+                    $('#contactList').append(`
+                <li class="list-group-item contacto"
+                    data-nombre="${contacto.name}">
+                    <strong>${contacto.name}</strong><br>
+                    <small>${contacto.alias}</small>
+                </li>
+            `);
+
+                });
+
+            }
 
             let contactoSeleccionado = '';
 
@@ -156,29 +203,32 @@
 
             });
 
-            $('.contacto').click(function () {
+            $(document).on(
+                'click',
+                '.contacto',
+                function () {
 
-                $('.contacto').removeClass(
-                    'active'
-                );
+                    $('.contacto').removeClass(
+                        'active'
+                    );
 
-                $(this).addClass(
-                    'active'
-                );
+                    $(this).addClass(
+                        'active'
+                    );
 
-                contactoSeleccionado =
-                    $(this).text();
+                    contactoSeleccionado =
+                        $(this).data('nombre');
 
-                $('#btnEnviarDinero').show();
+                    $('#btnEnviarDinero').show();
 
-            });
+                }
+            );
 
             $('#btnEnviarDinero').click(function () {
 
-                let monto =
-                    Number(
-                        $('#montoEnviar').val()
-                    );
+                let monto = Number(
+                    $('#montoEnviar').val()
+                );
 
                 if (
                     monto <= 0 ||
@@ -186,30 +236,73 @@
                 ) {
 
                     $('#mensajeTransferencia').html(`
-                        <div class="alert alert-danger">
-                            Ingrese un monto válido.
-                        </div>
-                    `);
+                <div class="alert alert-danger">
+                    Ingrese un monto válido.
+                </div>
+            `);
 
                     return;
+
+                }
+
+                if (!contactoSeleccionado) {
+
+                    $('#mensajeTransferencia').html(`
+                <div class="alert alert-danger">
+                    Debe seleccionar un contacto.
+                </div>
+            `);
+
+                    return;
+
                 }
 
                 if (monto > saldo) {
 
                     $('#mensajeTransferencia').html(`
-                        <div class="alert alert-danger">
-                            Saldo insuficiente.
-                        </div>
-                    `);
+                <div class="alert alert-danger">
+                    Saldo insuficiente.
+                </div>
+            `);
 
                     return;
+
                 }
 
                 saldo -= monto;
 
                 localStorage.setItem(
-                    'saldo',
+                    claveSaldo,
                     saldo
+                );
+
+                let movimientos =
+                    JSON.parse(
+                        localStorage.getItem(
+                            claveMovimientos
+                        )
+                    ) || [];
+
+                movimientos.unshift({
+
+                    tipo: 'transferencia',
+
+                    descripcion:
+                        'Transferencia a ' +
+                        contactoSeleccionado,
+
+                    tiempo: new Date()
+                        .toLocaleDateString('es-CL'),
+
+                    monto:
+                        '-$' +
+                        monto.toLocaleString('es-CL')
+
+                });
+
+                localStorage.setItem(
+                    claveMovimientos,
+                    JSON.stringify(movimientos)
                 );
 
                 $('#saldoActual').text(
@@ -217,14 +310,16 @@
                     saldo.toLocaleString('es-CL')
                 );
 
+                $('#montoEnviar').val('');
+
                 $('#mensajeTransferencia').html(`
-                    <div class="alert alert-success">
-                        Transferencia enviada a
-                        <strong>${contactoSeleccionado}</strong>
-                        por
-                        <strong>$${monto.toLocaleString('es-CL')}</strong>
-                    </div>
-                `);
+            <div class="alert alert-success">
+                Transferencia enviada a
+                <strong>${contactoSeleccionado}</strong>
+                por
+                <strong>$${monto.toLocaleString('es-CL')}</strong>
+            </div>
+        `);
 
             });
 
