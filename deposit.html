@@ -168,9 +168,32 @@
 
                 saldo = Number(saldo) + monto;
 
+                const claveMovimientos =
+                    `movimientos_${usuarioActual}`;
+
+                let movimientos =
+                    JSON.parse(
+                        localStorage.getItem(claveMovimientos)
+                    ) || [];
+
+                movimientos.unshift({
+
+                    tipo: 'deposito',
+
+                    descripcion: 'Depósito',
+
+                    tiempo: new Date()
+                        .toLocaleDateString('es-CL'),
+
+                    monto:
+                        '+$' +
+                        monto.toLocaleString('es-CL')
+
+                });
+
                 localStorage.setItem(
-                    claveSaldo,
-                    saldo
+                    claveMovimientos,
+                    JSON.stringify(movimientos)
                 );
 
                 $('#saldoActual').text(
