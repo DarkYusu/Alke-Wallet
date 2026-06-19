@@ -21,10 +21,7 @@
                 💳 Wallet
             </a>
 
-            <button class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
 
                 <span class="navbar-toggler-icon"></span>
 
@@ -76,18 +73,15 @@
 
         <div class="d-grid gap-2">
 
-            <button id="btnDepositar"
-                class="btn btn-primary btn-lg">
+            <button id="btnDepositar" class="btn btn-primary btn-lg">
                 Depositar
             </button>
 
-            <button id="btnEnviar"
-                class="btn btn-primary btn-lg">
+            <button id="btnEnviar" class="btn btn-primary btn-lg">
                 Enviar Dinero
             </button>
 
-            <button id="btnMovimientos"
-                class="btn btn-primary btn-lg">
+            <button id="btnMovimientos" class="btn btn-primary btn-lg">
                 Últimos Movimientos
             </button>
 
@@ -107,21 +101,41 @@
 
         $(document).ready(function () {
 
-            let saldo = localStorage.getItem('saldo');
+            const usuarioActual = localStorage.getItem('usuarioActual');
 
-            if (saldo) {
-                $('#saldoActual').text(
-                    '$' + Number(saldo).toLocaleString('es-CL')
-                );
+            if (!usuarioActual) {
+
+                window.location.href = 'login.html';
+                return;
+
             }
+
+            const claveSaldo = `saldo_${usuarioActual}`;
+
+            let saldo = localStorage.getItem(claveSaldo);
+
+            if (saldo === null) {
+
+                saldo = 60000;
+
+                localStorage.setItem(
+                    claveSaldo,
+                    saldo
+                );
+
+            }
+
+            $('#saldoActual').text(
+                '$' + Number(saldo).toLocaleString('es-CL')
+            );
 
             $('#btnDepositar').click(function () {
 
                 $('#mensajeMenu').html(`
-                    <div class="alert alert-info mt-3">
-                        Redirigiendo a Depositar...
-                    </div>
-                `);
+                <div class="alert alert-info mt-3">
+                    Redirigiendo a Depositar...
+                </div>
+            `);
 
                 setTimeout(function () {
                     window.location.href = 'deposit.html';
@@ -132,10 +146,10 @@
             $('#btnEnviar').click(function () {
 
                 $('#mensajeMenu').html(`
-                    <div class="alert alert-info mt-3">
-                        Redirigiendo a Enviar Dinero...
-                    </div>
-                `);
+                <div class="alert alert-info mt-3">
+                    Redirigiendo a Enviar Dinero...
+                </div>
+            `);
 
                 setTimeout(function () {
                     window.location.href = 'sendmoney.html';
@@ -146,10 +160,10 @@
             $('#btnMovimientos').click(function () {
 
                 $('#mensajeMenu').html(`
-                    <div class="alert alert-info mt-3">
-                        Redirigiendo a Últimos Movimientos...
-                    </div>
-                `);
+                <div class="alert alert-info mt-3">
+                    Redirigiendo a Últimos Movimientos...
+                </div>
+            `);
 
                 setTimeout(function () {
                     window.location.href = 'transactions.html';
@@ -160,7 +174,7 @@
         });
 
     </script>
-
+    
 </body>
 
 </html>
