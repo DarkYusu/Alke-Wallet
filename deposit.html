@@ -4,62 +4,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wallet - Depositar</title>
+    <title>Alke Wallet - Depositar</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <link href="assets/css/styles.css" rel="stylesheet">
 </head>
 
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-
         <div class="container-fluid">
-
-            <a class="navbar-brand" href="index.html">
-                💳 Wallet
-            </a>
+            <a class="navbar-brand" href="index.html">💳 Alke Wallet</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-
                 <span class="navbar-toggler-icon"></span>
-
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNav">
-
                 <ul class="navbar-nav ms-auto">
 
                     <li class="nav-item">
-                        <a class="nav-link" href="menu.html">
-                            Menú
-                        </a>
+                        <a class="nav-link" href="menu.html">Menú</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="login.html">
-                            Login
-                        </a>
+                        <a class="nav-link" href="login.html">Login</a>
                     </li>
 
                 </ul>
-
             </div>
-
         </div>
-
     </nav>
 
     <main class="container mt-5">
 
-        <h2 class="mb-4">
-            Depositar
-        </h2>
+        <h2 class="mb-4">Depositar</h2>
 
         <div class="alert alert-info">
             <strong>Saldo actual:</strong>
-            <span id="saldoActual">$60.000</span>
+            <span id="saldoActual">$0</span>
         </div>
 
         <div id="alert-container"></div>
@@ -67,13 +50,11 @@
         <form id="depositForm">
 
             <div class="mb-3">
-
                 <label for="depositAmount" class="form-label">
-                    Monto a depositar
+                    Monto a depositar (CLP $)
                 </label>
-
-                <input type="number" class="form-control" id="depositAmount" placeholder="Ingresa el monto">
-
+                <input type="number" class="form-control" id="depositAmount"
+                    placeholder="Ingresa el monto en pesos" min="1" step="1">
             </div>
 
             <button type="submit" class="btn btn-primary w-100">
@@ -82,8 +63,7 @@
 
         </form>
 
-        <p id="depositInfo" class="mt-3 fw-bold text-success">
-        </p>
+        <p id="depositInfo" class="mt-3 fw-bold text-success"></p>
 
         <a href="menu.html" class="btn btn-secondary w-100 mt-2">
             Volver al Menú Principal
@@ -92,11 +72,10 @@
     </main>
 
     <footer class="text-center mt-5 mb-3">
-        <p>&copy; 2026 Wallet. Todos los derechos reservados.</p>
+        <p>&copy; 2026 Alke Wallet. Todos los derechos reservados.</p>
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
@@ -106,89 +85,55 @@
             const usuarioActual = localStorage.getItem('usuarioActual');
 
             if (!usuarioActual) {
-
                 window.location.href = 'login.html';
                 return;
-
             }
 
             const claveSaldo = `saldo_${usuarioActual}`;
+            const claveMovimientos = `movimientos_${usuarioActual}`;
 
+            // Corrección: se eliminó el bloque muerto que usaba "monto"
+            // antes de que estuviera definido (causaba ReferenceError).
             let saldo = localStorage.getItem(claveSaldo);
 
             if (saldo === null) {
-
                 saldo = 60000;
-
-                const claveMovimientos =
-                    `movimientos_${usuarioActual}`;
-
-                let movimientos =
-                    JSON.parse(
-                        localStorage.getItem(claveMovimientos)
-                    ) || [];
-
-                movimientos.unshift({
-                    tipo: 'deposito',
-                    descripcion: 'Depósito',
-                    tiempo: 'Hoy',
-                    monto: '+' + '$' + monto.toLocaleString('es-CL')
-                });
-
-                localStorage.setItem(
-                    claveMovimientos,
-                    JSON.stringify(movimientos)
-                );
-
+                localStorage.setItem(claveSaldo, saldo);
             }
 
+            saldo = Number(saldo);
+
             $('#saldoActual').text(
-                '$' + Number(saldo).toLocaleString('es-CL')
+                '$' + saldo.toLocaleString('es-CL')
             );
 
             $('#depositForm').submit(function (e) {
 
                 e.preventDefault();
 
-                let monto = Number(
-                    $('#depositAmount').val()
-                );
+                let monto = Number($('#depositAmount').val());
 
                 if (monto <= 0 || isNaN(monto)) {
-
                     $('#alert-container').html(`
-                <div class="alert alert-danger">
-                    Debe ingresar un monto válido.
-                </div>
-            `);
-
+                        <div class="alert alert-danger">
+                            Debe ingresar un monto válido mayor a $0.
+                        </div>
+                    `);
                     return;
-
                 }
 
-                saldo = Number(saldo) + monto;
+                saldo = saldo + monto;
 
-                const claveMovimientos =
-                    `movimientos_${usuarioActual}`;
+                localStorage.setItem(claveSaldo, saldo);
 
                 let movimientos =
-                    JSON.parse(
-                        localStorage.getItem(claveMovimientos)
-                    ) || [];
+                    JSON.parse(localStorage.getItem(claveMovimientos)) || [];
 
                 movimientos.unshift({
-
                     tipo: 'deposito',
-
                     descripcion: 'Depósito',
-
-                    tiempo: new Date()
-                        .toLocaleDateString('es-CL'),
-
-                    monto:
-                        '+$' +
-                        monto.toLocaleString('es-CL')
-
+                    tiempo: new Date().toLocaleDateString('es-CL'),
+                    monto: '+$' + monto.toLocaleString('es-CL')
                 });
 
                 localStorage.setItem(
@@ -197,26 +142,24 @@
                 );
 
                 $('#saldoActual').text(
-                    '$' + Number(saldo).toLocaleString('es-CL')
+                    '$' + saldo.toLocaleString('es-CL')
                 );
 
                 $('#depositInfo').text(
-                    'Monto depositado: $' +
-                    monto.toLocaleString('es-CL')
+                    'Monto depositado: $' + monto.toLocaleString('es-CL')
                 );
 
                 $('#alert-container').html(`
-            <div class="alert alert-success">
-                Depósito realizado correctamente.
-                Será redirigido al menú principal.
-            </div>
-        `);
+                    <div class="alert alert-success">
+                        Depósito realizado correctamente.
+                        Será redirigido al menú principal.
+                    </div>
+                `);
+
+                $('#depositAmount').val('');
 
                 setTimeout(function () {
-
-                    window.location.href =
-                        'menu.html';
-
+                    window.location.href = 'menu.html';
                 }, 2000);
 
             });

@@ -4,69 +4,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wallet - Menú Principal</title>
+    <title>Alke Wallet - Menú Principal</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <link href="assets/css/styles.css" rel="stylesheet">
 </head>
 
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-
         <div class="container-fluid">
-
-            <a class="navbar-brand" href="index.html">
-                💳 Wallet
-            </a>
+            <a class="navbar-brand" href="index.html">💳 Alke Wallet</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-
                 <span class="navbar-toggler-icon"></span>
-
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNav">
-
                 <ul class="navbar-nav ms-auto">
 
                     <li class="nav-item">
-                        <a class="nav-link active" href="menu.html">
-                            Menú
-                        </a>
+                        <a class="nav-link active" href="menu.html">Menú</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="login.html">
-                            Login
-                        </a>
+                        <a class="nav-link" href="login.html">Login</a>
                     </li>
 
                 </ul>
-
             </div>
-
         </div>
-
     </nav>
 
     <main class="container mt-5">
 
-        <h2 class="mb-4">
-            Menú Principal
-        </h2>
+        <h2 class="mb-4">Menú Principal</h2>
 
         <div class="alert alert-info">
-
-            <label class="fw-bold">
-                Dinero en cuenta:
-            </label>
-
-            <h3 id="saldoActual" class="mt-2">
-                $60.000
-            </h3>
-
+            <label class="fw-bold">Dinero en cuenta:</label>
+            <h3 id="saldoActual" class="mt-2">$0</h3>
         </div>
 
         <div id="mensajeMenu"></div>
@@ -90,11 +66,10 @@
     </main>
 
     <footer class="text-center mt-5 mb-3">
-        <p>&copy; 2026 Wallet. Todos los derechos reservados.</p>
+        <p>&copy; 2026 Alke Wallet. Todos los derechos reservados.</p>
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
@@ -104,10 +79,8 @@
             const usuarioActual = localStorage.getItem('usuarioActual');
 
             if (!usuarioActual) {
-
                 window.location.href = 'login.html';
                 return;
-
             }
 
             const claveSaldo = `saldo_${usuarioActual}`;
@@ -115,14 +88,8 @@
             let saldo = localStorage.getItem(claveSaldo);
 
             if (saldo === null) {
-
                 saldo = 60000;
-
-                localStorage.setItem(
-                    claveSaldo,
-                    saldo
-                );
-
+                localStorage.setItem(claveSaldo, saldo);
             }
 
             $('#saldoActual').text(
@@ -130,51 +97,42 @@
             );
 
             $('#btnDepositar').click(function () {
-
                 $('#mensajeMenu').html(`
-                <div class="alert alert-info mt-3">
-                    Redirigiendo a Depositar...
-                </div>
-            `);
-
+                    <div class="alert alert-info mt-3">
+                        Redirigiendo a Depositar...
+                    </div>
+                `);
                 setTimeout(function () {
                     window.location.href = 'deposit.html';
-                }, 2000);
-
+                }, 1500);
             });
 
             $('#btnEnviar').click(function () {
-
                 $('#mensajeMenu').html(`
-                <div class="alert alert-info mt-3">
-                    Redirigiendo a Enviar Dinero...
-                </div>
-            `);
-
+                    <div class="alert alert-info mt-3">
+                        Redirigiendo a Enviar Dinero...
+                    </div>
+                `);
                 setTimeout(function () {
                     window.location.href = 'sendmoney.html';
-                }, 2000);
-
+                }, 1500);
             });
 
             $('#btnMovimientos').click(function () {
-
                 $('#mensajeMenu').html(`
-                <div class="alert alert-info mt-3">
-                    Redirigiendo a Últimos Movimientos...
-                </div>
-            `);
-
+                    <div class="alert alert-info mt-3">
+                        Redirigiendo a Últimos Movimientos...
+                    </div>
+                `);
                 setTimeout(function () {
                     window.location.href = 'transactions.html';
-                }, 2000);
-
+                }, 1500);
             });
 
         });
 
     </script>
-    
+
 </body>
 
 </html>

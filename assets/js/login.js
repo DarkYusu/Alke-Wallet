@@ -41,13 +41,13 @@ $(document).ready(function () {
 
             $("#alertContainer").html(`
                 <div class="alert alert-success">
-                    Inicio de sesión exitoso.
+                    Inicio de sesión exitoso. Redirigiendo...
                 </div>
             `);
 
             setTimeout(function () {
                 window.location.href = "menu.html";
-            }, 2000);
+            }, 1500);
 
         } else {
 
